@@ -9,7 +9,11 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'config/theme.dart';
+import 'cubit/authentication_cubit.dart';
+import 'cubit/authentication_state.dart';
 import 'cubit/theme_cubit.dart';
+import 'data/di/service_locator.dart';
+import 'ui/screens/login_screen.dart';
 import 'ui/screens/skeleton_screen.dart';
 
 /// Try using const constructors as much as possible!
@@ -26,6 +30,7 @@ void main() async {
   final HydratedStorage storage = await HydratedStorage.build(
     storageDirectory: tmpDir,
   );
+  await setup();
 
   HydratedBlocOverrides.runZoned(
     () => runApp(
@@ -33,9 +38,9 @@ void main() async {
         path: 'assets/translations',
         supportedLocales: const <Locale>[
           Locale('en'),
-          Locale('de'),
+          Locale('es'),
         ],
-        fallbackLocale: const Locale('en'),
+        fallbackLocale: const Locale('es'),
         useFallbackTranslations: true,
         child: const MyApp(),
       ),
@@ -55,7 +60,7 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, ThemeModeState state) {
           return MaterialApp(
             /// Localization is not available for the title.
-            title: 'Flutter Production Boilerplate',
+            title: 'Red Pedidos',
 
             /// Theme stuff
             theme: lightTheme,
@@ -67,8 +72,41 @@ class MyApp extends StatelessWidget {
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             debugShowCheckedModeBanner: false,
-            home: const SkeletonScreen(),
+            home: const AuthenticatedApp(),
           );
+        },
+      ),
+    );
+  }
+}
+
+class AuthenticatedApp extends StatelessWidget {
+  const AuthenticatedApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AuthenticationCubit>(
+      create: (BuildContext context) => AuthenticationCubit(),
+      child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
+        builder: (BuildContext context, AuthenticationState state) {
+          if (state is AuthenticationLoading) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          if (state is AuthenticationAuthenticated) {
+            return const SkeletonScreen();
+          }
+          return LoginScreen();
+
+          // return const Scaffold(
+          //   body: Center(
+          //     child: Text('Not authenticated'),
+          //   ),
+          // );
         },
       ),
     );
