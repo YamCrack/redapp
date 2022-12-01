@@ -9,7 +9,7 @@ class TextDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24, top: 24, right: 24, bottom: 10),
+      padding: const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 10),
       child: Row(children: <Widget>[
         Expanded(
           child: Divider(

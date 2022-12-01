@@ -9,9 +9,9 @@ part of 'price_model.dart';
 PriceModel _$PriceModelFromJson(Map<String, dynamic> json) => PriceModel(
       id: json['id'] as String?,
       code: json['code'] as String?,
-      idProduct: json['idProduct'] as String?,
+      idProduct: json['id_product'] as String?,
       name: json['name'] as String?,
-      price: json['price'] as String?,
+      price: fromNumber(json['price'] as String?),
       tag: json['tag'] as String?,
       createdAt: json['createdAt'] == null
           ? null
@@ -25,9 +25,9 @@ Map<String, dynamic> _$PriceModelToJson(PriceModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'code': instance.code,
-      'idProduct': instance.idProduct,
+      'id_product': instance.idProduct,
       'name': instance.name,
-      'price': instance.price,
+      'price': toNumber(instance.price),
       'tag': instance.tag,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),

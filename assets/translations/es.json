@@ -1,5 +1,18 @@
 {
   "app_name": "Fluuter test spanish",
+  "seller_mode": "Modo Vendedor",
+  "vendor_divide_title": "Vendedor",
+  "new_order": "Nuevo pedido",
+  "orders_overview": "Resumen de pedidos",
+  "stats_divider_title": "Estadísticas",
+
+  "bottom_nav_home": "Inicio",
+  "no_user_selected": "No hay usuario seleccionado",
+  "click_to_select_user": "Haga clic para seleccionar un usuario",
+  "items_divider_title": "Artículos",
+
+
+
 
   "bottom_nav_first": "Inicio",
   "bottom_nav_second": "Info",

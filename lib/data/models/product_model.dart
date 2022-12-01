@@ -29,8 +29,7 @@ class ProductModel {
       this.prices,
       this.images});
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductModelFromJson(json);
+  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 
@@ -46,6 +45,7 @@ class ProductModel {
   String? imageUrl;
   String? prodType;
   String? flags;
+  @JsonKey(name: 'id_image')
   String? idImage;
   int? ordersCount;
   DateTime? lastOrderAt;

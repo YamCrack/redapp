@@ -9,7 +9,7 @@ part of 'image_model.dart';
 ImageModel _$ImageModelFromJson(Map<String, dynamic> json) => ImageModel(
       id: json['id'] as String?,
       code: json['code'] as String?,
-      idProduct: json['idProduct'] as String?,
+      idProduct: json['id_product'] as String?,
       name: json['name'] as String?,
       image: json['image'] as String?,
       position: json['position'] as int?,
@@ -25,7 +25,7 @@ Map<String, dynamic> _$ImageModelToJson(ImageModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'code': instance.code,
-      'idProduct': instance.idProduct,
+      'id_product': instance.idProduct,
       'name': instance.name,
       'image': instance.image,
       'position': instance.position,

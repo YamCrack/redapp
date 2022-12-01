@@ -19,7 +19,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       imageUrl: json['imageUrl'] as String?,
       prodType: json['prodType'] as String?,
       flags: json['flags'] as String?,
-      idImage: json['idImage'] as String?,
+      idImage: json['id_image'] as String?,
       ordersCount: json['ordersCount'] as int?,
       lastOrderAt: json['lastOrderAt'] == null
           ? null
@@ -50,7 +50,7 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'imageUrl': instance.imageUrl,
       'prodType': instance.prodType,
       'flags': instance.flags,
-      'idImage': instance.idImage,
+      'id_image': instance.idImage,
       'ordersCount': instance.ordersCount,
       'lastOrderAt': instance.lastOrderAt?.toIso8601String(),
       'available': instance.available,

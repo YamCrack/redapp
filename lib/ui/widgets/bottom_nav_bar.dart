@@ -23,12 +23,10 @@ class BottomNavBar extends StatelessWidget {
           topRight: Radius.circular(16),
         ),
       ),
-      child: BlocBuilder<BottomNavCubit, int>(
-          builder: (BuildContext context, int state) {
+      child: BlocBuilder<BottomNavCubit, int>(builder: (BuildContext context, int state) {
         return BottomNavigationBar(
           currentIndex: state,
-          onTap: (int index) =>
-              context.read<BottomNavCubit>().updateIndex(index),
+          onTap: (int index) => context.read<BottomNavCubit>().updateIndex(index),
           type: BottomNavigationBarType.fixed,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -37,7 +35,7 @@ class BottomNavBar extends StatelessWidget {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: const Icon(Ionicons.home_outline),
-              label: tr('bottom_nav_first'),
+              label: tr('bottom_nav_home'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Ionicons.information_circle_outline),

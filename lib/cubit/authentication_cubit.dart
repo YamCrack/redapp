@@ -25,16 +25,13 @@ class AuthenticationCubit extends HydratedCubit<AuthenticationState> {
     if (json['user'] == null) {
       return AuthenticationNotAuthenticated();
     } else {
-      final UserModel user =
-          UserModel.fromJson(json['user'] as Map<String, dynamic>);
+      final UserModel user = UserModel.fromJson(json['user'] as Map<String, dynamic>);
       return AuthenticationAuthenticated(user: user);
     }
   }
 
   @override
   Map<String, Map<String, dynamic>?> toJson(AuthenticationState state) {
-    return <String, Map<String, dynamic>?>{
-      'user': state is AuthenticationAuthenticated ? state.user.toJson() : null
-    };
+    return <String, Map<String, dynamic>?>{'user': state is AuthenticationAuthenticated ? state.user.toJson() : null};
   }
 }

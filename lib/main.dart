@@ -7,7 +7,6 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:hive/hive.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:red_app/ui/screens/login_screen2.dart';
 
 import 'config/theme.dart';
 import 'cubit/authentication_cubit.dart';
@@ -15,6 +14,7 @@ import 'cubit/authentication_state.dart';
 import 'cubit/theme_cubit.dart';
 import 'data/di/service_locator.dart';
 import 'ui/screens/login_screen.dart';
+import 'ui/screens/seller_screen.dart';
 import 'ui/screens/skeleton_screen.dart';
 
 /// Try using const constructors as much as possible!
@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
             locale: context.locale,
             debugShowCheckedModeBanner: false,
             home: const AuthenticatedApp(),
+            // routes: ,
           );
         },
       ),
@@ -101,7 +102,7 @@ class AuthenticatedApp extends StatelessWidget {
           if (state is AuthenticationAuthenticated) {
             return const SkeletonScreen();
           }
-          return LoginScreen2();
+          return const LoginScreen();
 
           // return const Scaffold(
           //   body: Center(
