@@ -5,7 +5,8 @@ import '../widgets/header.dart';
 import '../widgets/grid_item.dart';
 import '../widgets/second_screen/link_card.dart';
 import '../widgets/second_screen/text_divider.dart';
-import 'new_order_screen.dart';
+import 'order_screen.dart';
+import 'orders/edit_order_screen.dart';
 import 'second_screen.dart';
 
 class SellerScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class SellerScreen extends StatelessWidget {
                   // url: Uri.parse('https://www.instagram.com/anfeichtinger'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (routeContext) => const NewOrderScreen(),
+                      builder: (routeContext) => EditOrderScreen(),
                     ));
                   },
                 ),

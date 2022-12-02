@@ -1,4 +1,4 @@
-package dev.feichtinger.flutterproductionboilerplate.flutter_production_boilerplate
+package mx.com.pcpro.redapp
 
 import io.flutter.embedding.android.FlutterActivity
 

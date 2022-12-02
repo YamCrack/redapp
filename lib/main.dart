@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:hive/hive.dart';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:red_app/config/size_config.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'config/theme.dart';
 import 'cubit/authentication_cubit.dart';
@@ -14,7 +17,6 @@ import 'cubit/authentication_state.dart';
 import 'cubit/theme_cubit.dart';
 import 'data/di/service_locator.dart';
 import 'ui/screens/login_screen.dart';
-import 'ui/screens/seller_screen.dart';
 import 'ui/screens/skeleton_screen.dart';
 
 /// Try using const constructors as much as possible!
@@ -26,8 +28,8 @@ void main() async {
   if (Platform.isAndroid) {
     await FlutterDisplayMode.setHighRefreshRate();
   }
-  final Directory tmpDir = await getTemporaryDirectory();
-  Hive.init(tmpDir.toString());
+  final Directory tmpDir = await getApplicationDocumentsDirectory();
+  Hive.initFlutter(tmpDir.toString());
   final HydratedStorage storage = await HydratedStorage.build(
     storageDirectory: tmpDir,
   );
@@ -91,6 +93,7 @@ class AuthenticatedApp extends StatelessWidget {
       create: (BuildContext context) => AuthenticationCubit(),
       child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
         builder: (BuildContext context, AuthenticationState state) {
+          SizeConfig().init(context);
           if (state is AuthenticationLoading) {
             return const Scaffold(
               body: Center(

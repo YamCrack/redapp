@@ -42,8 +42,9 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
           ? null
           : DateTime.parse(json['updatedAt'] as String),
       items: (json['items'] as List<dynamic>?)
-          ?.map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       address: json['address'] == null
           ? null
           : AddressModel.fromJson(json['address'] as Map<String, dynamic>),
@@ -51,8 +52,9 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
           ? null
           : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       events: (json['events'] as List<dynamic>?)
-          ?.map((e) => OrderEventModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map((e) => OrderEventModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       fulfiller: json['fulfiller'] == null
           ? null
           : UserModel.fromJson(json['fulfiller'] as Map<String, dynamic>),

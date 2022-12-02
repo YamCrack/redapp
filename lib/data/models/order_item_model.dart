@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../shared/api/constants/endpoints.dart';
 import '../../shared/utils/json_utils.dart';
 
 part 'order_item_model.g.dart';
@@ -40,4 +41,12 @@ class OrderItemModel {
   double? fulfilledQty;
   String? createdAt;
   String? updatedAt;
+
+  String getImage() {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return Endpoints.imagesUrl + imageUrl!;
+    }
+
+    return '';
+  }
 }

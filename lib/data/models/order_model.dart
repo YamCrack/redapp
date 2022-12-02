@@ -40,14 +40,20 @@ class OrderModel {
     this.tag,
     this.createdAt,
     this.updatedAt,
-    this.items,
+    this.items = const [],
     this.address,
     this.user,
-    this.events,
+    this.events = const [],
     this.fulfiller,
     this.salesman,
     this.courier,
   });
+
+  factory OrderModel.fromJson(Map<String, dynamic> json) => _$OrderModelFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
+
+  bool isNew() => id == null || id!.isEmpty;
+  double itemsCount() => items.fold(0, (previousValue, element) => previousValue + element.quantity!);
 
   String? id;
   @JsonKey(name: 'id_user')
@@ -91,14 +97,16 @@ class OrderModel {
   String? tag;
   DateTime? createdAt;
   DateTime? updatedAt;
-  List<OrderItemModel>? items;
+  List<OrderItemModel> items = [];
   AddressModel? address;
   UserModel? user;
-  List<OrderEventModel>? events;
+  List<OrderEventModel> events = [];
   UserModel? fulfiller;
   UserModel? salesman;
   UserModel? courier;
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) => _$OrderModelFromJson(json);
-  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
+  void recalculateTotals() {
+    subtotal = items.fold(0, (previousValue, element) => previousValue! + element.amount!);
+    total = subtotal! + deliveryCost! - discount! + commission!;
+  }
 }
