@@ -30,12 +30,12 @@ class OrderModel {
     this.idDeliveryMethod,
     this.deliveryMethod,
     this.deliveryDate,
-    this.deliveryCost,
-    this.paymentAmount,
-    this.subtotal,
-    this.discount,
-    this.total,
-    this.commission,
+    this.deliveryCost = 0,
+    this.paymentAmount = 0,
+    this.subtotal = 0,
+    this.discount = 0,
+    this.total = 0,
+    this.commission = 0,
     this.extra,
     this.tag,
     this.createdAt,
@@ -43,7 +43,7 @@ class OrderModel {
     this.items = const [],
     this.address,
     this.user,
-    this.events = const [],
+    this.events,
     this.fulfiller,
     this.salesman,
     this.courier,
@@ -97,10 +97,11 @@ class OrderModel {
   String? tag;
   DateTime? createdAt;
   DateTime? updatedAt;
+  @JsonValue([])
   List<OrderItemModel> items = [];
   AddressModel? address;
   UserModel? user;
-  List<OrderEventModel> events = [];
+  List<OrderEventModel>? events;
   UserModel? fulfiller;
   UserModel? salesman;
   UserModel? courier;
@@ -108,5 +109,14 @@ class OrderModel {
   void recalculateTotals() {
     subtotal = items.fold(0, (previousValue, element) => previousValue! + element.amount!);
     total = subtotal! + deliveryCost! - discount! + commission!;
+  }
+
+  List<Map<String, dynamic>> getItemsApi() {
+    return items
+        .where(
+          (element) => !element.toRemove,
+        )
+        .map((e) => e.toApi())
+        .toList();
   }
 }

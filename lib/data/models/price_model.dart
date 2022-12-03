@@ -12,6 +12,8 @@ class PriceModel {
 
   Map<String, dynamic> toJson() => _$PriceModelToJson(this);
 
+  bool get isDefault => code == 'default';
+
   String? id;
   String? code;
   @JsonKey(name: 'id_product')

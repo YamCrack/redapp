@@ -21,7 +21,7 @@ class EditOrderScreen extends StatelessWidget {
           if (state is OrderStateLoading || state is OrderStateInitial) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is OrderStateFail) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text('Error: ${state.message}', style: Theme.of(context).textTheme.bodyMedium));
           }
 
           final OrderModel order = (state as OrderStateFetched).order;
@@ -29,7 +29,7 @@ class EditOrderScreen extends StatelessWidget {
           return Scaffold(
             appBar: buildAppBar(context, order),
             body: Body(order: order),
-            bottomNavigationBar: CheckoutCard(
+            bottomNavigationBar: OrderCompleteCard(
               order: order,
             ),
           );

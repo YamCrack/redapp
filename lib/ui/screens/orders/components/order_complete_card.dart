@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-// import 'package:shop_app/components/default_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../config/constants.dart';
 import '../../../../config/size_config.dart';
+import '../../../../cubit/order_cubit.dart';
+import '../../../../data/models/order_item_model.dart';
 import '../../../../data/models/order_model.dart';
+import '../../../../data/models/product_model.dart';
 import '../../../../shared/utils/format_utils.dart';
 import '../../../widgets/default_button.dart';
+import '../../products/select_product.dart';
 // import '../../../constants.dart';
 // import '../../../size_config.dart';
 
-class CheckoutCard extends StatelessWidget {
-  const CheckoutCard({super.key, required this.order});
+class OrderCompleteCard extends StatefulWidget {
+  const OrderCompleteCard({super.key, required this.order});
+
+  @override
+  State<OrderCompleteCard> createState() => _OrderCompleteCardState();
 
   final OrderModel order;
+}
+
+class _OrderCompleteCardState extends State<OrderCompleteCard> {
+  OrderModel get order => widget.order;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,7 @@ class CheckoutCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, -15),
+            offset: const Offset(0, -15),
             blurRadius: 20,
             color: const Color(0xFFDADADA).withOpacity(0.15),
           )
@@ -54,12 +66,21 @@ class CheckoutCard extends StatelessWidget {
                     child: const Icon(Ionicons.receipt) // SvgPicture.asset("assets/icons/receipt.svg"),
                     ),
                 const Spacer(),
-                const Text('Agregar Articulo'),
-                const SizedBox(width: 10),
-                const Icon(
-                  Icons.add_box, //arrow_forward_ios,
-                  size: 22,
-                  // color: kTextColor,
+                GestureDetector(
+                  onTap: _selectProduct,
+                  child: Row(
+                    children: const <Widget>[
+                      Text(
+                        'Agregar Articulo',
+                      ),
+                      SizedBox(width: 10),
+                      Icon(Icons.add_box, //arrow_forward_ios,
+                          size: 22,
+                          color: kPrimaryColor
+                          // color: kTextColor,
+                          )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -82,7 +103,9 @@ class CheckoutCard extends StatelessWidget {
                   width: getProportionateScreenWidth(190),
                   child: DefaultButton(
                     text: order.isNew() ? 'Generar Pedido' : 'Actualizar Pedido',
-                    press: () {},
+                    press: () {
+                      context.read<OrderCubit>().createOrUpdateOrder(order);
+                    },
                   ),
                 ),
               ],
@@ -91,5 +114,19 @@ class CheckoutCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _selectProduct() async {
+    final ProductModel? prod = await Navigator.of(context).push<ProductModel>(MaterialPageRoute(
+      builder: (routeContext) => const SelectProductScreen(),
+    ));
+
+    if (prod != null) {
+      _productSelected(prod);
+    }
+  }
+
+  Future<void> _productSelected(ProductModel prod) async {
+    context.read<OrderCubit>().addProduct(order, prod);
   }
 }

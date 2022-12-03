@@ -1,3 +1,5 @@
+import '../../shared/api/constants/endpoints.dart';
+import '../../shared/utils/json_utils.dart';
 import 'image_model.dart';
 import 'price_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -33,6 +35,23 @@ class ProductModel {
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 
+  PriceModel? get defaultPrice {
+    if (prices != null && prices!.isNotEmpty) {
+      final PriceModel price = prices!.firstWhere((PriceModel price) => price.isDefault, orElse: () => prices!.first);
+      return price;
+    }
+
+    return null;
+  }
+
+  String getImage() {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return Endpoints.imagesUrl + imageUrl!;
+    }
+
+    return '';
+  }
+
   String? id;
   String? code;
   String? title;
@@ -42,6 +61,7 @@ class ProductModel {
   String? brand;
   String? tags;
   String? status;
+  @JsonKey(name: 'image_url')
   String? imageUrl;
   String? prodType;
   String? flags;
@@ -49,7 +69,9 @@ class ProductModel {
   String? idImage;
   int? ordersCount;
   DateTime? lastOrderAt;
-  String? available;
+
+  @JsonKey(name: 'available', toJson: toNumber, fromJson: fromNumber)
+  double? available;
   String? inventoryPolicy;
   String? createdAt;
   String? updatedAt;

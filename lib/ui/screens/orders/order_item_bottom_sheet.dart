@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/constants.dart';
+import '../../../cubit/order_item_edit_cubit.dart';
+import '../../../cubit/product_info_cubit.dart';
 import '../../../data/models/order_item_model.dart';
+import '../../../data/models/price_model.dart';
+import '../../../data/models/product_model.dart';
 import '../../../shared/utils/format_utils.dart';
 import '../../widgets/app_text.dart';
 import '../../widgets/default_button.dart';
@@ -19,10 +25,44 @@ class OrderItemBottomSheetState extends State<OrderItemBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return sheetContent();
+    return BlocProvider(
+      create: (context) => ProductInfoCubit()..fetchProduct(item.idProduct!),
+      child: BlocBuilder<ProductInfoCubit, ProductInfoState>(
+        builder: (context, state) {
+          if (state is ProductInfoLoading || state is ProductInfoInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is ProductInfoError) {
+            return Center(
+                child: Text(
+              state.message,
+              style: const TextStyle(backgroundColor: Colors.white),
+            ));
+          }
+
+          if (state is ProductInfoFetched) {
+            final ProductModel product = state.product;
+
+            return BlocProvider(
+              create: (context) => OrderItemEditCubit()..updateItem(item),
+              child: BlocBuilder<OrderItemEditCubit, OrderItemEditState>(
+                builder: (context, state) {
+                  return sheetContent(product, item, context);
+                },
+              ),
+            );
+          }
+
+          return Container();
+        },
+      ),
+    );
+
+    // sheetContent();
   }
 
-  Widget sheetContent() {
+  Widget sheetContent(ProductModel product, OrderItemModel item, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
@@ -57,16 +97,34 @@ class OrderItemBottomSheetState extends State<OrderItemBottomSheet> {
           const SizedBox(
             height: 45,
           ),
+          if (product.prices!.length > 1) getDivider() else Container(),
+          if (product.prices!.length > 1)
+            // checkoutRow('Precio (Precio de Lista)', trailingText: 'Cambiar')
+            ...product.prices!.map((price) {
+              return getPriceWidget(
+                price,
+                item,
+                onTap: () {
+                  item.price = price.price;
+                  item.priceId = price.id;
+                  context.read<OrderItemEditCubit>().updateItem(item);
+                },
+              );
+            }).toList()
+          else
+            Container(),
+
           getDivider(),
-          checkoutRow('Precio (Precio de Lista)', trailingText: 'Cambiar'),
-          getDivider(),
-          checkoutRow('Cantidad',
+          sheetRow('Cantidad',
               trailingWidget: ItemCounterWidget(
                 amount: item.quantity!.toInt(),
-                onAmountChanged: (int value) {},
+                onAmountChanged: (int value) {
+                  item.quantity = value.toDouble();
+                  context.read<OrderItemEditCubit>().updateItem(item);
+                },
               )),
           getDivider(),
-          checkoutRow('Importe total', trailingText: formatCurrency(item.amount)),
+          sheetRow('Importe total', trailingText: formatCurrency(item.amount)),
           getDivider(),
           const SizedBox(
             height: 30,
@@ -76,11 +134,21 @@ class OrderItemBottomSheetState extends State<OrderItemBottomSheet> {
             margin: const EdgeInsets.only(
               top: 25,
             ),
-            child: DefaultButton(text: 'Guardar', press: () {}),
+            child: DefaultButton(
+                text: 'Guardar',
+                press: () {
+                  Navigator.pop(context, item);
+                }),
           ),
         ],
       ),
     );
+  }
+
+  Widget getPriceWidget(PriceModel price, OrderItemModel item, {VoidCallback? onTap}) {
+    return Container(
+        color: item.price == price.price ? kPrimaryLightColor : Colors.white,
+        child: sheetRow(price.name!, trailingText: formatCurrency(price.price), onTap: onTap));
   }
 
   Widget getDivider() {
@@ -90,59 +158,43 @@ class OrderItemBottomSheetState extends State<OrderItemBottomSheet> {
     );
   }
 
-  // Widget termsAndConditionsAgreement(BuildContext context) {
-  //   return RichText(
-  //     text: TextSpan(
-  //         text: 'By placing an order you agree to our',
-  //         style: TextStyle(
-  //           color: Color(0xFF7C7C7C),
-  //           fontSize: 14,
-  //           // fontFamily: Theme.of(context).textTheme.bodyText1.fontFamily,
-  //           fontWeight: FontWeight.w600,
-  //         ),
-  //         children: [
-  //           TextSpan(text: ' Terms', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-  //           TextSpan(text: ' And'),
-  //           TextSpan(text: ' Conditions', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-  //         ]),
-  //   );
-  // }
-
-  Widget checkoutRow(String label, {String? trailingText, Widget? trailingWidget, VoidCallback? onTap}) {
+  Widget sheetRow(String label, {String? trailingText, Widget? trailingWidget, VoidCallback? onTap}) {
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 15,
       ),
-      child: Row(
-        children: [
-          AppText(
-            text: label,
-            fontSize: 18,
-            color: const Color(0xFF7C7C7C),
-            fontWeight: FontWeight.w600,
-          ),
-          const Spacer(),
-          if (trailingText == null)
-            trailingWidget!
-          else
-            AppText(
-              text: trailingText,
-              fontSize: 16,
-              // color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-          const SizedBox(
-            width: 20,
-          ),
-          if (onTap == null)
-            Container()
-          else
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-            )
-        ],
-      ),
+      child: GestureDetector(
+          onTap: onTap,
+          child: Row(
+            children: [
+              AppText(
+                text: label,
+                fontSize: 18,
+                color: const Color(0xFF7C7C7C),
+                fontWeight: FontWeight.w600,
+              ),
+              const Spacer(),
+              if (trailingText == null)
+                trailingWidget!
+              else
+                AppText(
+                  text: trailingText,
+                  fontSize: 16,
+                  // color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              const SizedBox(
+                width: 20,
+              ),
+              if (onTap == null)
+                Container()
+              else
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 20,
+                )
+            ],
+          )),
     );
   }
 

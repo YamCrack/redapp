@@ -21,4 +21,9 @@ class Endpoints {
   // users
   static const String orderAdd = 'order.create';
   static const String orderUpdate = 'order.update';
+  static const String orderInfo = 'order.info';
+
+  // products
+  static const String prodInfo = 'product.info';
+  static const String prodList = 'product.list';
 }

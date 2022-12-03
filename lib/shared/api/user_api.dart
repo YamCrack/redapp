@@ -8,7 +8,7 @@ class UserApi {
 
   final DioClient dioClient;
 
-  Future<Response> search(String query) async {
+  Future<Response<dynamic>> search(String query) async {
     try {
       final Map<String, dynamic> data = {
         'criteria': getLikeUserCriteria(query),
@@ -16,8 +16,7 @@ class UserApi {
         'offset': 0,
       };
 
-      final Response response =
-          await dioClient.post(Endpoints.usersList, data: data);
+      final Response<dynamic> response = await dioClient.post(Endpoints.usersList, data: data);
       return response;
     } catch (e) {
       rethrow;
@@ -35,8 +34,7 @@ class UserApi {
         data['code'] = code;
       }
 
-      final Response response =
-          await dioClient.post(Endpoints.usersInfo, data: data);
+      final Response response = await dioClient.post(Endpoints.usersInfo, data: data);
       return response;
     } catch (e) {
       rethrow;
@@ -45,8 +43,8 @@ class UserApi {
 
   Future<Response> login(String username, String password) async {
     try {
-      final Response response = await dioClient.post(Endpoints.usersLogin,
-          data: <String, String>{'username': username, 'password': password});
+      final Response response = await dioClient
+          .post(Endpoints.usersLogin, data: <String, String>{'username': username, 'password': password});
       return response;
     } catch (e) {
       rethrow;
@@ -55,8 +53,7 @@ class UserApi {
 
   Future<void> remove(String id) async {
     try {
-      await dioClient
-          .post(Endpoints.usersRemove, data: <String, String>{'id': id});
+      await dioClient.post(Endpoints.usersRemove, data: <String, String>{'id': id});
     } catch (e) {
       rethrow;
     }

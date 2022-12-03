@@ -13,10 +13,24 @@ class DioExceptions implements Exception {
         message = 'Receive timeout in connection with API server';
         break;
       case DioErrorType.response:
+        print('==========> response data: ${(dioError.response?.data as Map<String, dynamic>).keys}');
+
+        if (dioError.response?.data is Map) {
+          final map = dioError.response!.data as Map<String, dynamic>;
+          if (map.containsKey('error')) {
+            message = map['error'] as String;
+            break;
+          } else if (map.containsKey('message')) {
+            message = map['message'] as String;
+            break;
+          }
+        }
+
         message = _handleError(
           dioError.response?.statusCode ?? 400,
           dioError.response?.data,
         );
+
         break;
       case DioErrorType.sendTimeout:
         message = 'Send timeout in connection with API server';

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 
 import 'constants/endpoints.dart';
 
@@ -54,6 +55,15 @@ class DioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
+      final sessionId = await _getSessionId();
+      // options.headers = {
+      //     'SessionID': sessionId,
+      //   },
+
+      if (sessionId != null) {
+        _dio.options.headers = {'x-sessionID': sessionId};
+      }
+
       final Response response = await _dio.post(
         uri,
         data: data,
@@ -63,10 +73,16 @@ class DioClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
+
       return response;
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<String?> _getSessionId() async {
+    final box = await Hive.openBox('auth');
+    return box.get('sessionId') as String?;
   }
 
   // Put:-----------------------------------------------------------------------

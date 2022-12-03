@@ -18,6 +18,8 @@ OrderItemModel _$OrderItemModelFromJson(Map<String, dynamic> json) =>
       quantity: fromNumber(json['quantity'] as String?),
       amount: fromNumber(json['amount'] as String?),
       fulfilledQty: (json['fulfilledQty'] as num?)?.toDouble(),
+      priceId: json['priceId'] as String?,
+      toRemove: json['toRemove'] as bool? ?? false,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
     );
@@ -36,4 +38,6 @@ Map<String, dynamic> _$OrderItemModelToJson(OrderItemModel instance) =>
       'fulfilledQty': instance.fulfilledQty,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'priceId': instance.priceId,
+      'toRemove': instance.toRemove,
     };

@@ -14,7 +14,7 @@ class OrderApi {
         'userId': order.idUser,
         // 'addressId':
         'notes': order.notes,
-        'items': order.items,
+        'items': order.getItemsApi(),
       };
 
       final Response<dynamic> response = await dioClient.post(Endpoints.orderAdd, data: data);
@@ -31,7 +31,7 @@ class OrderApi {
         // 'userId': order.idUser,
         // 'addressId':
         'notes': order.notes,
-        'items': order.items,
+        'items': order.getItemsApi(),
         'salesmanId': order.idSalesman,
         'status': order.status,
         'courierId': order.idCourier,
@@ -39,6 +39,19 @@ class OrderApi {
       };
 
       final Response<dynamic> response = await dioClient.post(Endpoints.orderUpdate, data: data);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response<dynamic>> info(String id) async {
+    try {
+      final Map<String, dynamic> data = {
+        'id': id,
+      };
+
+      final Response<dynamic> response = await dioClient.post(Endpoints.orderInfo, data: data);
       return response;
     } catch (e) {
       rethrow;

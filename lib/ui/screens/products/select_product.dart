@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/user_search_cubit.dart';
-import '../../data/models/user_model.dart';
-import '../widgets/user_card.dart';
-import '../widgets/user_list_card.dart';
+import '../../../cubit/product_search_cubit.dart';
+import '../../../data/models/product_model.dart';
+import '../../../data/models/user_model.dart';
+import '../../widgets/user_list_card.dart';
+import 'components/product_item_card.dart';
 
-class SelectUserScreen extends StatefulWidget {
-  const SelectUserScreen({super.key});
+class SelectProductScreen extends StatefulWidget {
+  const SelectProductScreen({super.key});
 
   @override
-  State<SelectUserScreen> createState() => _SelectUserScreenState();
+  State<SelectProductScreen> createState() => _SelectProductScreenState();
 }
 
-class _SelectUserScreenState extends State<SelectUserScreen> {
+class _SelectProductScreenState extends State<SelectProductScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UserSearchCubit()..search(''),
-      child: BlocBuilder<UserSearchCubit, UserSearchState>(
+      create: (context) => ProductSearchCubit()..search(''),
+      child: BlocBuilder<ProductSearchCubit, ProductSearchState>(
         builder: (context, state) {
           return _buildScreen(context, state);
         },
@@ -26,16 +27,16 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
     );
   }
 
-  Widget _buildScreen(BuildContext context, UserSearchState state) {
+  Widget _buildScreen(BuildContext context, ProductSearchState state) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         // backgroundColor: Colors.grey.shade900,
-        title: Container(
+        title: SizedBox(
           height: 38,
           child: TextField(
             onChanged: (value) {
-              BlocProvider.of<UserSearchCubit>(context).search(value);
+              BlocProvider.of<ProductSearchCubit>(context).search(value);
             },
             style: const TextStyle(color: Colors.white),
             cursorColor: Colors.white,
@@ -50,48 +51,48 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                 focusColor: Colors.white,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
                 hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500),
-                hintText: 'Buscar un usuario'),
+                hintText: 'Buscar un producto'),
           ),
         ),
       ),
       body: Container(
         // color: Colors.grey.shade900,
-        child: _buildUsersList(context, state),
+        child: _buildProductList(context, state),
       ),
     );
   }
 
-  Widget _buildUsersList(BuildContext context, UserSearchState state) {
-    if (state is UserSearchLoading || state is UserSearchInitial) {
+  Widget _buildProductList(BuildContext context, ProductSearchState state) {
+    if (state is ProductSearchLoading || state is ProductSearchInitial) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state is UserSearchError) {
+    if (state is ProductSearchError) {
       return Center(child: Text('Error: ${state.message}'));
     }
 
-    if (state is! UserSearchFetched) {
+    if (state is! ProductSearchFetched) {
       return const Center(child: Text('Unknown state: '));
     }
-    final users = state.response.users!;
+    final products = state.response.products!;
 
-    return users.isNotEmpty
+    return products.isNotEmpty
         ? ListView.builder(
-            itemCount: users.length,
+            itemCount: products.length,
             itemBuilder: (context, index) {
-              return UserListCard(
-                user: users[index],
-                onTap: () => _selectUser(users[index]),
+              return ProductItemCard(
+                product: products[index],
+                onTap: () => _selectProduct(products[index]),
               );
             })
         : const Center(
             child: Text(
-            'No se encontraron usuarios',
+            'No se encontraron productos',
             style: TextStyle(color: Colors.white),
           ));
   }
 
-  void _selectUser(UserModel user) {
-    Navigator.pop(context, user);
+  void _selectProduct(ProductModel product) {
+    Navigator.pop(context, product);
   }
 }

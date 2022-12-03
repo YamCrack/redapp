@@ -9,12 +9,11 @@ class UserRepository {
 
   final UserApi userApi;
 
-  Future<List<UserModel>> searchUsers(String query) async {
+  Future<UserResponse> searchUsers(String query) async {
     try {
       final Response<dynamic> response = await userApi.search(query);
-      final UserResponse res =
-          UserResponse.fromJson(response.data as Map<String, dynamic>);
-      return res.users!;
+      final UserResponse res = UserResponse.fromJson(response.data as Map<String, dynamic>);
+      return res;
     } on DioError catch (e) {
       final String errorMessage = DioExceptions.fromDioError(e).toString();
       throw Exception(errorMessage);
@@ -24,8 +23,7 @@ class UserRepository {
   Future<UserModel> getUserInfo(String? id, String? code) async {
     try {
       final Response<dynamic> response = await userApi.info(id, code);
-      final UserResponse res =
-          UserResponse.fromJson(response.data as Map<String, dynamic>);
+      final UserResponse res = UserResponse.fromJson(response.data as Map<String, dynamic>);
       return res.user!;
     } on DioError catch (e) {
       final String errorMessage = DioExceptions.fromDioError(e).toString();

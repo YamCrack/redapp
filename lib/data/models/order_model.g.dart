@@ -27,12 +27,22 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       idDeliveryMethod: json['id_deliveryMethod'] as String?,
       deliveryMethod: json['deliveryMethod'] as String?,
       deliveryDate: json['deliveryDate'] as String?,
-      deliveryCost: fromNumber(json['deliveryCost'] as String?),
-      paymentAmount: fromNumber(json['paymentAmount'] as String?),
-      subtotal: fromNumber(json['subtotal'] as String?),
-      discount: fromNumber(json['discount'] as String?),
-      total: fromNumber(json['total'] as String?),
-      commission: fromNumber(json['commission'] as String?),
+      deliveryCost: json['deliveryCost'] == null
+          ? 0
+          : fromNumber(json['deliveryCost'] as String?),
+      paymentAmount: json['paymentAmount'] == null
+          ? 0
+          : fromNumber(json['paymentAmount'] as String?),
+      subtotal: json['subtotal'] == null
+          ? 0
+          : fromNumber(json['subtotal'] as String?),
+      discount: json['discount'] == null
+          ? 0
+          : fromNumber(json['discount'] as String?),
+      total: json['total'] == null ? 0 : fromNumber(json['total'] as String?),
+      commission: json['commission'] == null
+          ? 0
+          : fromNumber(json['commission'] as String?),
       extra: json['extra'] as String?,
       tag: json['tag'] as String?,
       createdAt: json['createdAt'] == null
@@ -52,9 +62,8 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
           ? null
           : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       events: (json['events'] as List<dynamic>?)
-              ?.map((e) => OrderEventModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+          ?.map((e) => OrderEventModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       fulfiller: json['fulfiller'] == null
           ? null
           : UserModel.fromJson(json['fulfiller'] as Map<String, dynamic>),

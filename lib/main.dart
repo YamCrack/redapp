@@ -30,26 +30,27 @@ void main() async {
   }
   final Directory tmpDir = await getApplicationDocumentsDirectory();
   Hive.initFlutter(tmpDir.toString());
-  final HydratedStorage storage = await HydratedStorage.build(
-    storageDirectory: tmpDir,
-  );
+  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: tmpDir
+      // kIsWeb ? HydratedStorage.webStorageDirectory : tmpDir,
+      );
   await setup();
 
-  HydratedBlocOverrides.runZoned(
-    () => runApp(
-      EasyLocalization(
-        path: 'assets/translations',
-        supportedLocales: const <Locale>[
-          Locale('en'),
-          Locale('es'),
-        ],
-        fallbackLocale: const Locale('es'),
-        useFallbackTranslations: true,
-        child: const MyApp(),
-      ),
+  // HydratedBlocOverrides.runZoned(
+  //  () =>
+  runApp(
+    EasyLocalization(
+      path: 'assets/translations',
+      supportedLocales: const <Locale>[
+        Locale('en'),
+        Locale('es'),
+      ],
+      fallbackLocale: const Locale('es'),
+      useFallbackTranslations: true,
+      child: const MyApp(),
     ),
-    storage: storage,
   );
+  //   storage: storage,
+  // );
 }
 
 class MyApp extends StatelessWidget {
