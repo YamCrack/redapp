@@ -16,7 +16,7 @@ class EditOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderCubit()..getOrder(orderId, context),
+      create: (context) => OrderCubit()..getOrder(orderId),
       child: BlocConsumer<OrderCubit, OrderState>(
         listenWhen: (previous, current) => current is OrderStateFail || current is OrderStateSaved,
         listener: (context, state) {

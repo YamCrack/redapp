@@ -18,11 +18,10 @@ class OrderCubit extends Cubit<OrderState> {
 
   final OrderRepository _orderRepository = getIt<OrderRepository>();
 
-  Future<void> getOrder(String? orderId, BuildContext context) async {
+  Future<void> getOrder(String? orderId) async {
     emit(OrderStateLoading());
     try {
       final OrderModel order = orderId != null ? await _orderRepository.info(orderId) : OrderModel();
-      // final OrderModel order = await getMockOrder(context);
       emit(OrderStateFetched(order));
     } catch (e) {
       emit(OrderStateFail(e.toString()));

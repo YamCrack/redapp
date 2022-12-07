@@ -32,7 +32,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     return Material(
         color: Theme.of(context).colorScheme.background,
         child: BlocProvider(
-            create: (context) => OrderCubit()..getOrder(orderId, context),
+            create: (context) => OrderCubit()..getOrder(orderId),
             child: BlocBuilder<OrderCubit, OrderState>(
               builder: (context, state) {
                 if (state is OrderStateLoading || state is OrderStateInitial) {
