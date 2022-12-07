@@ -91,7 +91,7 @@ class AuthenticatedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationCubit>(
-      create: (BuildContext context) => AuthenticationCubit(),
+      create: (BuildContext context) => AuthenticationCubit()..checkSession(),
       child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
         builder: (BuildContext context, AuthenticationState state) {
           SizeConfig().init(context);

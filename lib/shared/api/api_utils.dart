@@ -20,3 +20,12 @@ Map<String, dynamic> getLikeProductCriteria(String query) {
   return getLikeCriteriaFromList(
       fields: <String>['code', 'title', 'description', 'category', 'brand', 'tags', 'status'], query: query);
 }
+
+Map<String, dynamic> getActiveOrdersCriteria(String id) {
+  return {
+    'id_salesman': id,
+    'status': <String, dynamic>{
+      r'$in': <String>['pending', 'processing']
+    }
+  };
+}

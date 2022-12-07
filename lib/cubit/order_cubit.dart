@@ -9,6 +9,7 @@ import '../data/models/product_model.dart';
 import '../data/models/user_model.dart';
 import '../data/repository/order_repository.dart';
 import '../shared/utils/mock_utils.dart';
+import 'order_errors.dart';
 
 part 'order_state.dart';
 
@@ -62,9 +63,10 @@ class OrderCubit extends Cubit<OrderState> {
       }
       order.items.add(OrderItemModel.fromProduct(product));
       order.recalculateTotals();
+
       // final OrderModel order = await getMockOrder(context);
       updateOrder(order);
-    } catch (e) {
+    } on Exception catch (e, _) {
       emit(OrderStateFail(e.toString()));
     }
   }
@@ -75,11 +77,27 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderStateFetched(order));
   }
 
+  void validateOrder(OrderModel order) {
+    if (order.items.isEmpty) {
+      throw OrderError('Debes añadir al menos un producto al pedido');
+    }
+    if (order.user == null) {
+      throw OrderError('Debes seleccionar un cliente');
+    }
+  }
+
   Future<void> createOrUpdateOrder(OrderModel order) async {
+    try {
+      validateOrder(order);
+    } catch (e) {
+      emit(OrderStateFail(e.toString()));
+      return;
+    }
     emit(OrderStateLoading());
     try {
       final OrderModel updatedOrder =
           order.isNew() ? await _orderRepository.createOrder(order) : await _orderRepository.updateOrder(order);
+      emit(OrderStateSaved());
       emit(OrderStateFetched(updatedOrder));
     } catch (e) {
       emit(OrderStateFail(e.toString()));

@@ -7,6 +7,7 @@ import '../widgets/second_screen/link_card.dart';
 import '../widgets/second_screen/text_divider.dart';
 import 'order_screen.dart';
 import 'orders/edit_order_screen.dart';
+import 'overview_orders/overview_orders_screen.dart';
 import 'second_screen.dart';
 
 class SellerScreen extends StatelessWidget {
@@ -34,17 +35,21 @@ class SellerScreen extends StatelessWidget {
                 GridItem(
                   title: 'new_order',
                   icon: Ionicons.add_circle,
-                  // url: Uri.parse('https://www.instagram.com/anfeichtinger'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (routeContext) => EditOrderScreen(),
+                      builder: (routeContext) => const EditOrderScreen(),
                     ));
                   },
                 ),
                 GridItem(
                   title: 'orders_overview',
                   icon: Ionicons.bag_check,
-                  url: Uri.parse('https://twitter.com/_pharrax'),
+                  // url: Uri.parse('https://twitter.com/_pharrax'),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (routeContext) => OverviewOrderScreen(),
+                    ));
+                  },
                 ),
                 // GridItem(
                 //   title: 'donate_card_title',

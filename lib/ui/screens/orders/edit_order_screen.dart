@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +17,21 @@ class EditOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => OrderCubit()..getOrder(orderId, context),
-      child: BlocBuilder<OrderCubit, OrderState>(
+      child: BlocConsumer<OrderCubit, OrderState>(
+        listenWhen: (previous, current) => current is OrderStateFail || current is OrderStateSaved,
+        listener: (context, state) {
+          if (state is OrderStateFail) {
+            errorDialog(context, state.message);
+          } else if (state is OrderStateSaved) {
+            savedDialog(context);
+          }
+        },
+        buildWhen: (previous, current) => current is OrderStateFetched,
         builder: (context, state) {
-          if (state is OrderStateLoading || state is OrderStateInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is OrderStateFail) {
-            return Center(child: Text('Error: ${state.message}', style: Theme.of(context).textTheme.bodyMedium));
+          if (state is OrderStateLoading) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
 
           final OrderModel order = (state as OrderStateFetched).order;
@@ -36,6 +46,31 @@ class EditOrderScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void errorDialog(BuildContext context, String message) {
+    final dialog = AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      title: 'Error',
+      desc: message,
+      // btnCancelOnPress: () {},
+      // btnOkOnPress: () {},
+    ); // ..show();
+    dialog.show();
+  }
+
+  void savedDialog(BuildContext context) {
+    final dialog = AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'Orden guardada',
+      desc: 'La orden se ha guardado correctamente',
+      btnOkOnPress: () {},
+    ); // ..show();
+    dialog.show();
   }
 
   AppBar buildAppBar(BuildContext context, OrderModel order) {

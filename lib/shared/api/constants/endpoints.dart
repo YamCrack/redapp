@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 class Endpoints {
   Endpoints._();
 
   // base url
-  static const String serverUrl = 'http://192.168.1.5:8080';
+  static const String serverUrl = kDebugMode ? 'http://192.168.1.5:8080' : 'http://app.red-gdl.com';
   static const String baseUrl = '$serverUrl/api/';
   static const String imagesUrl = '$serverUrl/images/';
 
@@ -22,6 +24,7 @@ class Endpoints {
   static const String orderAdd = 'order.create';
   static const String orderUpdate = 'order.update';
   static const String orderInfo = 'order.info';
+  static const String orderList = 'order.list';
 
   // products
   static const String prodInfo = 'product.info';

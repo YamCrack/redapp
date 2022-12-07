@@ -13,6 +13,8 @@ class OrderStateLoading extends OrderState {}
 
 class OrderStateUpdating extends OrderState {}
 
+class OrderStateSaved extends OrderState {}
+
 class OrderStateFetched extends OrderState {
   const OrderStateFetched(this.order);
 

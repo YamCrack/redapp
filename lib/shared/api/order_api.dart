@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../data/models/order_model.dart';
+import '../../data/models/user_model.dart';
+import 'api_utils.dart';
 import 'constants/endpoints.dart';
 import 'dio_client.dart';
 
@@ -58,21 +60,18 @@ class OrderApi {
     }
   }
 
-  // Future<Response> info(String? id, String? code) async {
-  //   try {
-  //     Map<String, String> data = {};
-  //     if (id != null) {
-  //       data['id'] = id;
-  //     }
+  Future<Response<dynamic>> listActiveOrders(String userId, {int offset = 0, int limit = 25}) async {
+    try {
+      final Map<String, dynamic> data = {
+        'criteria': getActiveOrdersCriteria(userId),
+        'limit': limit,
+        'offset': offset,
+      };
 
-  //     if (code != null) {
-  //       data['code'] = code;
-  //     }
-
-  //     final Response response = await dioClient.post(Endpoints.usersInfo, data: data);
-  //     return response;
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+      final Response<dynamic> response = await dioClient.post(Endpoints.orderList, data: data);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

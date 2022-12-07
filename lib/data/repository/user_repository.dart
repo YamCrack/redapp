@@ -20,7 +20,7 @@ class UserRepository {
     }
   }
 
-  Future<UserModel> getUserInfo(String? id, String? code) async {
+  Future<UserModel> info({String? id, String? code}) async {
     try {
       final Response<dynamic> response = await userApi.info(id, code);
       final UserResponse res = UserResponse.fromJson(response.data as Map<String, dynamic>);

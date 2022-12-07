@@ -12,6 +12,8 @@ class AuthRepository {
   final UserApi userApi;
   final BehaviorSubject<UserModel?> onAuthChange = BehaviorSubject<UserModel?>();
 
+  UserModel? get currentUser => onAuthChange.valueOrNull;
+
   Stream<UserModel?> get onAuthStateChanged {
     return onAuthChange.stream;
   }
@@ -41,8 +43,8 @@ class AuthRepository {
     box.put('sessionId', sessionId);
   }
 
-  Future<String> _getSessionId() async {
+  Future<String?> getSessionId() async {
     final box = await Hive.openBox('auth');
-    return box.get('sessionId') as String;
+    return box.get('sessionId') as String?;
   }
 }

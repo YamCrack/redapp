@@ -43,4 +43,15 @@ class OrderRepository {
       throw Exception(errorMessage);
     }
   }
+
+  Future<OrderResponseModel> activeOrders(String userId) async {
+    try {
+      final Response<dynamic> response = await orderApi.listActiveOrders(userId);
+      final OrderResponseModel res = OrderResponseModel.fromJson(response.data as Map<String, dynamic>);
+      return res;
+    } on DioError catch (e) {
+      final String errorMessage = DioExceptions.fromDioError(e).toString();
+      throw Exception(errorMessage);
+    }
+  }
 }
