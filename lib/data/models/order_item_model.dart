@@ -66,7 +66,7 @@ class OrderItemModel {
   String getImage() {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       final url = Endpoints.imagesUrl + imageUrl!;
-      return 'https://wsrv.nl/?url=$url&w=300&h=300&fit=cover';
+      return 'https://wsrv.nl/?url=$url&w=200&h=200&fit=cover';
     }
 
     return '';
